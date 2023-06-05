@@ -113,4 +113,38 @@ public class CategoryTest
         var exception = Assert.Throws<EntityValidationException>(action);
         Assert.Equal($"Description should be at greater than {DomainEntity.Category.DescriptionMaxLength} characters long", exception.Message);
     }
+
+    [Fact(DisplayName = nameof(Activate))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void Activate()
+    {
+        var validData = new
+        {
+            Name = "Category name",
+            Description = "Category description",
+        };
+
+        var category = new DomainEntity.Category(validData.Name, validData.Description, isActive: false);
+        Assert.False(category.IsActive);
+        category.Activate();
+
+        Assert.True(category.IsActive);
+    }
+
+    [Fact(DisplayName = nameof(Deactivate))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void Deactivate()
+    {
+        var validData = new
+        {
+            Name = "Category name",
+            Description = "Category description",
+        };
+
+        var category = new DomainEntity.Category(validData.Name, validData.Description, isActive: true);
+        Assert.True(category.IsActive);
+        category.Deactivate();
+
+        Assert.False(category.IsActive);
+    }
 }
