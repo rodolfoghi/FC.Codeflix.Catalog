@@ -4,6 +4,11 @@ namespace FC.Codeflix.Catalog.Domain.Entity;
 
 public class Category
 {
+    public const int NameMinLength = 3;
+
+    public const int NameMaxLength = 255;
+
+    public const int DescriptionMaxLength = 10_000;
 
     public Guid Id { get; private set; }
 
@@ -34,13 +39,18 @@ public class Category
     public void Validate()
     {
         if (string.IsNullOrWhiteSpace(Name))
-        {
             throw new EntityValidationException($"{nameof(Name)} should not be empty or null");
-        }
+
+        if (Name.Length < NameMinLength)
+            throw new EntityValidationException($"{nameof(Name)} should be at least {NameMinLength} characters long");
+
+        if (Name.Length > NameMaxLength)
+            throw new EntityValidationException($"{nameof(Name)} should be at greater than {NameMaxLength} characters long");
 
         if (Description is null)
-        {
             throw new EntityValidationException($"{nameof(Description)} should not be null");
-        }
+
+        if (Description.Length > DescriptionMaxLength)
+            throw new EntityValidationException($"{nameof(Description)} should be at greater than {DescriptionMaxLength} characters long");
     }
 }
